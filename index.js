@@ -128,6 +128,12 @@ async function run() {
       const result = await tasksCollection.find(onGOingFind).toArray()
       res.send(result);
     })
+    app.get('/alltodo', async (req, res) => {
+      const email = req.query.email;
+      const onGOingFind = { email: email, status: 'todo' };
+      const result = await tasksCollection.find(onGOingFind).toArray()
+      res.send(result);
+    })
 
   } finally {
 
