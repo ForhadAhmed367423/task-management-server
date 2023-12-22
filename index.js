@@ -74,13 +74,13 @@ async function run() {
 
     app.get('/managetask', async (req, res) => {
       const email = req.query.email;
-      const todoFind = { email: email, status:'todo' };
-      const completedFind = { email: email, status:'completed' };
-      const ongoingFind = { email: email, status:'ongoing' };
+      const todoFind = { email: email, status: 'todo' };
+      const completedFind = { email: email, status: 'completed' };
+      const ongoingFind = { email: email, status: 'ongoing' };
       const todo = await tasksCollection.find(todoFind).toArray();
       const completed = await tasksCollection.find(completedFind).toArray();
-      const  ongoing= await tasksCollection.find(ongoingFind).toArray();
-      res.send({todo,completed,ongoing});
+      const ongoing = await tasksCollection.find(ongoingFind).toArray();
+      res.send({ todo, completed, ongoing });
     })
 
     app.put('/ongoing/:id', async (req, res) => {
@@ -99,23 +99,35 @@ async function run() {
       const result = await tasksCollection.updateOne(query, updateDoc, options)
       res.send(result);
     });
-// completed
-app.put('/ongoing/:id', async (req, res) => {
-  console.log('forhad ahmed')
-  const id = req.params.id;
-  const query = { _id: new ObjectId(id) }
-  const options = { upsert: true };
-  const updateDoc = {
-    $set: {
+    // completed
+    app.put('/completed/:id', async (req, res) => {
 
-      status: 'ongoing'
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
 
-    },
-    // image, title, agent_name, agent_image, location, user_email, Max_price, Min_Price, category
-  };
-  const result = await tasksCollection.updateOne(query, updateDoc, options)
-  res.send(result);
-});g
+          status: 'completed'
+
+        },
+        // image, title, agent_name, agent_image, location, user_email, Max_price, Min_Price, category
+      };
+      const result = await tasksCollection.updateOne(query, updateDoc, options)
+      res.send(result);
+    });
+    app.get('/allOngoing', async (req, res) => {
+      const email = req.query.email;
+      const onGOingFind = { email: email, status: 'ongoing' };
+      const result = await tasksCollection.find(onGOingFind).toArray()
+      res.send(result);
+    })
+    app.get('/allCompleted', async (req, res) => {
+      const email = req.query.email;
+      const onGOingFind = { email: email, status: 'completed' };
+      const result = await tasksCollection.find(onGOingFind).toArray()
+      res.send(result);
+    })
 
   } finally {
 
